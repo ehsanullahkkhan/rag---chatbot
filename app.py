@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 import faiss
 
 st.set_page_config(page_title="Traffic RAG Assistant", page_icon="🚦", layout="wide")
-KB_DIR = "knowledge_base"
+KB_DIR = "knowledge base"
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
