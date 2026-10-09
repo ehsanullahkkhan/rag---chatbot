@@ -8,8 +8,9 @@ import faiss
 
 st.set_page_config(page_title="Traffic RAG Assistant", page_icon="🚦", layout="wide")
 KB_DIR = "knowledge_base"
-OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.2"
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+
 
 st.markdown("""
 <style>
