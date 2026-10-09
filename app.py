@@ -91,16 +91,41 @@ def is_traffic_question(q):
 
 def ask_ollama(prompt):
     try:
-        r = requests.post(OLLAMA_URL, json={"model":OLLAMA_MODEL,"prompt":prompt,"stream":False}, timeout=120)
-        if r.status_code != 200:
-            return f"Ollama returned HTTP {r.status_code}. Please make sure Ollama is running and '{OLLAMA_MODEL}' is installed."
-        return r.json().get("response", "").strip() or "I could not generate an answer."
-    except requests.exceptions.ConnectionError:
-        return "I cannot connect to Ollama. Open Command Prompt and run:\n\n`ollama run llama3.2`\n\nThen try again."
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        data = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": prompt}
+                    ]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.2,
+                "maxOutputTokens": 512
+            }
+        }
+
+        response = requests.post(
+            f"{GEMINI_URL}?key={GEMINI_API_KEY}",
+            headers=headers,
+            json=data,
+            timeout=60
+        )
+
+        if response.status_code != 200:
+            return f"Gemini API error: {response.status_code}. Check your API key and configuration."
+
+        result = response.json()
+        return result["candidates"][0]["content"]["parts"][0]["text"].strip()
+
     except requests.exceptions.Timeout:
-        return "The AI model took too long to respond. Please try again."
+        return "Gemini response took too long. Please try again."
     except Exception as e:
-        return f"An error occurred while contacting the AI model: {e}"
+        return f"Error contacting Gemini: {e}"
 
 def retrieve(question, index, chunks, model, top_k=4):
     if index is None or not chunks: return []
