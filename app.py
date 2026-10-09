@@ -62,9 +62,8 @@ def get_embedding_model():
 @st.cache_resource(show_spinner="Building knowledge-base index...")
 def build_index():
     documents = load_documents()
-    st.write("Documents loaded:", len(documents))
-st.write("Files found:", os.listdir(KB_DIR))
-    if not documents: return None, [], None
+   
+    
     chunks = make_chunks(documents)
     model = get_embedding_model()
     embeddings = np.asarray(model.encode([c["text"] for c in chunks], normalize_embeddings=True), dtype="float32")
